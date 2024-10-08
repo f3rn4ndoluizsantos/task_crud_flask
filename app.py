@@ -26,12 +26,6 @@ def created():
     return jsonify({'message': "New task created"}), 201
 
 
-
-@app.before_request
-def before_request():
-    print("Before request: ", request.url)
-
-
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
     output = {
@@ -48,6 +42,11 @@ def get_task(id):
         return jsonify({'message': 'Task not found'}), 404
     return jsonify({'task': task[0].to_dict()}), 200
 
+
+
+@app.before_request
+def before_request():
+    print("Before request: ", request.url)
 
 @app.route('/tasks/<int:id>', methods=['PUT'])
 def update_task(id):
@@ -66,16 +65,18 @@ def update_task(id):
     task.description = new_data.get('description')
     task.completed = new_data.get('completed')
 
-    # resultado = [(index, task) for index, task in enumerate(tasks) if task.id == id]
-       
-    # if len(resultado) == 0:
-    #     return jsonify({'message': 'Task not found'}), 404
-    
-
-    # resultado[0][1].title = new_data.get('title')
-    # resultado[0][1].description = new_data.get('description')
-    # resultado[0][1].completed = new_data.get('completed')
-
     return jsonify({'message': 'Task updated'}), 202
+
+
+@app.route('/tasks/<int:id>', methods=['DELETE'])
+def delete_task(id):
+    filtered_data = list(filter(lambda item: item.id == id, tasks))
+
+    if len(filtered_data) == 0: 
+        return jsonify({'message': 'Task not found'}), 404
+
+    tasks.remove(filtered_data[0])
+    return jsonify({'message': 'Task deleted'}), 200
+
 
 app.run(debug=True, port=5000)
