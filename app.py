@@ -8,9 +8,15 @@ tasks = [
 
 task_id_control = 1
 
-# @app.after_request
-# def after_request(response):
-#     print("After request: ", response.status)
+@app.after_request
+def after_request(response):
+    print("After request: ", response.status)
+    print(response)
+    return response
+
+# @app.before_request
+# def before_request(response):
+#     print("Before request: ", request.url)
 #     return response
 
 @app.route('/tasks', methods=['POST'])
