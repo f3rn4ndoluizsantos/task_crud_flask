@@ -93,6 +93,11 @@ def test_delete_task():
         assert "id" in data
         assert task_id == data["id"]
 
+        response_2 = requests.get(f"{BASE_URL}/tasks/{task_id}")
+        response_json_2 = response_2.json()
+        assert response_2.status_code == 404
+        assert "message" in response_json_2
+
 
 def test_delete_task_error():
     if tasks:
